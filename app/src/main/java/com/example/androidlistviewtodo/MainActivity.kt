@@ -1,5 +1,6 @@
 package com.example.androidlistviewtodo
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             result ->
-//todo: handle result
+            //todo: handle result
+    }
+    private fun createTask(){
+        val intent = Intent(this,TaskEditActivity::class.java)
+        resultLauncher.launch(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +48,10 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.menu_insert -> true
+            R.id.menu_insert -> {
+                createTask()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
