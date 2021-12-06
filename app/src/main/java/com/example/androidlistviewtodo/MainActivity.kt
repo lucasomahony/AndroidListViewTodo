@@ -1,5 +1,6 @@
 package com.example.androidlistviewtodo
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -10,6 +11,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.androidlistviewtodo.databinding.ActivityMainBinding
 
@@ -19,8 +21,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             result ->
-            //todo: handle result
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = result.data?.getStringExtra("task_text")!!
+            listItems.add(task)
+            adapter.notifyDataSetChanged()
+        }
     }
+    private val listItems = mutableListOf<String>()
+    private lateinit var adapter: ArrayAdapter<String>
+
+
+
     private fun createTask(){
         val intent = Intent(this,TaskEditActivity::class.java)
         resultLauncher.launch(intent)
@@ -33,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        adapter = ArrayAdapter<String>(this,R.layout.list_layout, listItems)
+        binding.content.listView.adapter = adapter
 
 
     }
